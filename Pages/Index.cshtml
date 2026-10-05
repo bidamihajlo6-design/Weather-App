@@ -1,0 +1,20 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "WeatherApp";
+}
+
+<div class="text-center">
+    <h1>WeatherApp</h1>
+    <p>Програма для перегляду погоди</p>
+
+    <form method="post">
+        <input type="text" name="city" placeholder="Введіть місто" />
+
+        <button type="submit">Пошук</button>
+    </form>
+    @if (!string.IsNullOrEmpty(Model.City))
+    {
+        <p>Ви ввели: @Model.City</p>
+    }
+</div>
