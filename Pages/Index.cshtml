@@ -13,8 +13,10 @@
 
         <button type="submit">Пошук</button>
     </form>
-    @if (!string.IsNullOrEmpty(Model.City))
+    @if (!string.IsNullOrEmpty(Model.Weather.City))
     {
-        <p>Ви ввели: @Model.City</p>
+        <h2>Місто: @Model.Weather.City</h2>
+        <p>Температура: @Model.Weather.Temperature °C</p>
+        <p>Вологість: @Model.Weather.Humidity %</p>
     }
 </div>
