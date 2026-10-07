@@ -13,10 +13,29 @@
 
         <button type="submit">Пошук</button>
     </form>
-    @if (!string.IsNullOrEmpty(Model.Weather.City))
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
     {
-        <h2>Місто: @Model.Weather.City</h2>
-        <p>Температура: @Model.Weather.Temperature °C</p>
-        <p>Вологість: @Model.Weather.Humidity %</p>
+        <p> @Model.ErrorMessage</p>
+    }
+    @if (!string.IsNullOrEmpty(Model.Weather.City))
+    {<h2>Місто: @Model.Weather.City</h2>
+
+    <h3>Опис: @Model.Weather.Description</h3>
+
+    <p>Температура: @Model.Weather.Temperature °C</p>
+
+    <p>Відчувається як: @Model.Weather.FeelsLike °C</p>
+
+    <p>Вологість: @Model.Weather.Humidity %</p>
+
+    <p>Тиск: @Model.Weather.Pressure hPa</p>
+
+    <p>Вітер: @Model.Weather.WindSpeed м/с</p>
+
+    <p>Напрямок: @WeatherApp.Models.WeatherHelper.GetWindDirection(Model.Weather.WindDirection)</p>
+
+    <p>Хмарність: @Model.Weather.Cloudiness %</p>
+
+    <p>Видимість: @Model.Weather.Visibility км</p>
     }
 </div>
