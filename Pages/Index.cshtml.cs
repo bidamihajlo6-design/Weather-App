@@ -53,14 +53,8 @@ public class IndexModel : PageModel
                 x.Country == "UA" &&
                 (
                     x.Name.Equals(searchCity, StringComparison.OrdinalIgnoreCase)
-                    || x.LocalNames.Ukrainian.Equals(searchCity, StringComparison.OrdinalIgnoreCase)
+                    || (x.LocalNames?.Ukrainian?.Equals(searchCity, StringComparison.OrdinalIgnoreCase) ?? false)
                 ));
-
-        if (location == null)
-        {
-            location = locations
-                .FirstOrDefault(x => x.Country == "UA");
-        }
 
         if (location == null)
         {
@@ -88,7 +82,13 @@ public class IndexModel : PageModel
         OpenWeatherResponse response =
             JsonSerializer.Deserialize<OpenWeatherResponse>(json)!;
         
-        Weather.City = response.Name;
+       
+        string? ukrainianCityName = location.LocalNames?.Ukrainian;
+
+        Weather.City = !string.IsNullOrWhiteSpace(ukrainianCityName)
+            ? ukrainianCityName
+            : location.Name;
+
         Weather.Temperature = response.Main.Temp;
         Weather.FeelsLike = response.Main.FeelsLike;
         Weather.Humidity = response.Main.Humidity;
@@ -101,6 +101,7 @@ public class IndexModel : PageModel
         if (response.Weather.Count > 0)
         {
             Weather.Description = response.Weather[0].Description;
+            Weather.Icon = response.Weather[0].Icon;
         }
     }
     

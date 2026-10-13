@@ -57,4 +57,7 @@ public class WeatherData
 {
     [JsonPropertyName("description")]
     public string Description { get; set; } = "";
+
+    [JsonPropertyName("icon")]
+    public string Icon {get; set; } = "";
 }
