@@ -24,6 +24,11 @@ public class IndexModel : PageModel
 
     public async Task OnPost(string city)
     {
+        if (string.IsNullOrWhiteSpace(city))
+        {
+            ErrorMessage = "Введіть назву міста.";
+            return;
+        }
         string apiKey = _configuration["OpenWeather:ApiKey"]!;
 
         string encodedCity = Uri.EscapeDataString(city);

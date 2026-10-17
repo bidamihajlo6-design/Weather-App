@@ -32,6 +32,7 @@ body {
   text-align: start;
 }
 
+
 .app-title {
   font-size: 42px;
   font-weight: 700;
@@ -46,10 +47,10 @@ body {
 }
 
 .city-input {
-  padding: 12px 15px;
+  padding: 14px 18px;
   width: 280px;
   border: 1px solid #334155;
-  border-radius: 10px;
+  border-radius: 14px;
   background-color: #1E293B;
   color: #F4F7FF;
   font-size: 16px;
@@ -62,7 +63,7 @@ body {
 .search-button {
   padding: 12px 22px;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   background-color: #3B82F6;
   color: white;
   font-size: 16px;
