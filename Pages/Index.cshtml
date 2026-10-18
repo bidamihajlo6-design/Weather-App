@@ -4,6 +4,7 @@
     ViewData["Title"] = "WeatherApp";
 }
 
+<div boll class = "HasWeatherData" = false></div>
 <div class="text-center">
     <h1 class="app-title">WeatherApp</h1>
     <p class="app-subtittle">Погода у твоєму місці</p>
@@ -17,7 +18,7 @@
     {
         <p class="error-message"> @Model.ErrorMessage</p>
     }
-    @if (!string.IsNullOrEmpty(Model.Weather.City)) {
+    @if (Model.HasWeatherData) {
 <div class="weather-card">
         <h2 class="weather-city">@Model.Weather.City</h2>
 
@@ -34,19 +35,19 @@
     </div>
     <div class="weather-details">
 
-        <p class="weather-detail">Відчувається як: @Model.Weather.FeelsLike °C</p>
+        <p class="weather-detail">🌡️Відчувається як: @Model.Weather.FeelsLike °C</p>
 
-        <p class="weather-detail">Вологість: @Model.Weather.Humidity %</p>
+        <p class="weather-detail">💧Вологість: @Model.Weather.Humidity %</p>
 
-        <p class="weather-detail">Тиск: @Model.Weather.Pressure hPa</p>
+        <p class="weather-detail">🌀Тиск: @Model.Weather.Pressure hPa</p>
 
-        <p class="weather-detail">Вітер: @Model.Weather.WindSpeed м/с</p>
+        <p class="weather-detail">💨Вітер: @Model.Weather.WindSpeed м/с</p>
 
-        <p class="weather-detail">Напрямок: @WeatherApp.Models.WeatherHelper.GetWindDirection(Model.Weather.WindDirection)</p>
+        <p class="weather-detail">🧭Напрямок: @WeatherApp.Models.WeatherHelper.GetWindDirection(Model.Weather.WindDirection)</p>
 
-        <p class="weather-detail">Хмарність: @Model.Weather.Cloudiness %</p>
+        <p class="weather-detail">☁️Хмарність: @Model.Weather.Cloudiness %</p>
 
-        <p class="weather-detail">Видимість: @Model.Weather.Visibility км</p>
-        </div>
+        <p class="weather-detail">👁️Видимість: @Model.Weather.Visibility км</p>
+        </div> 
     </div>
 }
