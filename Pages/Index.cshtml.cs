@@ -1,22 +1,20 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.Net.Http.Headers;
-using System.Text.Json;
 using WeatherApp.Models;
+using WeatherApp.Services;
+using System.Text.Json;
 
 namespace WeatherApp.Pages;
 
 public class IndexModel : PageModel
 {
-    private readonly IConfiguration _configuration;
+    private readonly WeatherService _weathersServise;
     public string ErrorMessage {get; set;} ="";
     public bool HasWeatherData {get; set;} = false;
     public Weather Weather { get; set; } = new Weather();
 
-    public IndexModel(IConfiguration configuration)
+    public IndexModel(WeatherService weatherServise)
     {
-        _configuration = configuration;
+        _weathersServise = weatherServise;
     }
 
     public void OnGet()
@@ -30,58 +28,13 @@ public class IndexModel : PageModel
             ErrorMessage = "Введіть назву міста.";
             return;
         }
-        string? apiKey = _configuration["OpenWeather:ApiKey"];
-        if (string.IsNullOrWhiteSpace(apiKey))
-        {
-            ErrorMessage = "Невдалося отримати API-ключ.Перевірте конфігурацію.";
-            return;
-        }
-
-        string encodedCity = Uri.EscapeDataString(city);
-        using HttpClient client = new HttpClient();
-        string geoUrl =
-            $"https://api.openweathermap.org/geo/1.0/direct?q={encodedCity},UA&limit=5&appid={apiKey}";
-
 
         try
         {
-            HttpResponseMessage geoResponse = await client.GetAsync(geoUrl);
-            if (!geoResponse.IsSuccessStatusCode)
-                {
-                    ErrorMessage = "Не вдалося знайти місто.";
-                    return;
-                }
-
-            string geoJson = await geoResponse.Content.ReadAsStringAsync();
-
-            List<GeocodingResponse>? locations =
-                JsonSerializer.Deserialize<List<GeocodingResponse>>(geoJson);
-            
-            if(locations is null)
-            {
-                ErrorMessage = "Не вдалося обробити дані міста.";
-                return;
-            }
-
-            string searchCity = city.Trim();
-
-            if (locations == null || locations.Count == 0)
-            {
-                ErrorMessage = "Місто не знайдено. Перевірте правильність назви.";
-                return;
-            }
-
-            GeocodingResponse? location = locations
-                .FirstOrDefault(x =>
-                    x.Country == "UA" &&
-                    (
-                        x.Name.Equals(searchCity, StringComparison.OrdinalIgnoreCase)
-                        || (x.LocalNames?.Ukrainian?.Equals(searchCity, StringComparison.OrdinalIgnoreCase) ?? false)
-                    ));
-
+            GeocodingResponse? location = await _weathersServise.GetCityCoordinates(city);
             if(location is null)
             {
-                ErrorMessage = "Координати не знайдено.";
+                ErrorMessage = "Місто не знайдено. Перевірте назву.";
                 return;
             }
 
@@ -89,26 +42,12 @@ public class IndexModel : PageModel
             {
                 ErrorMessage = "Отримані некоректні дані Міста.";
                 return;
-            } 
-
+            }
             double latitude = location.Lat;
-            double longitude = location.Lon;
-            string url =
-                $"https://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&appid={apiKey}&units=metric&lang=uk";
-
-            HttpResponseMessage responseMessage = await client.GetAsync(url);
-
-            if (!responseMessage.IsSuccessStatusCode)
-            {
-                ErrorMessage = "Помилка отримання погоди.";
-
-                return;
-            } 
-
-            string json = await responseMessage.Content.ReadAsStringAsync();
+            double longitude = location.Lon; 
 
             OpenWeatherResponse? response =
-                JsonSerializer.Deserialize<OpenWeatherResponse>(json);
+                await _weathersServise.GetWeather(latitude,longitude);
             
             if(response is null)
             {
