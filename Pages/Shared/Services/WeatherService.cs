@@ -1,5 +1,4 @@
 namespace WeatherApp.Services;
-using Microsoft.Extensions.Configuration;
 using WeatherApp.Models;
 using System.Text.Json;
 
