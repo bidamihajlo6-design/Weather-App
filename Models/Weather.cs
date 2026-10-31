@@ -11,8 +11,8 @@ public class Weather
     public double WindDirection {get; set;}
     public int Cloudiness {get; set;}
     public double Visibility {get; set;}
-    public double Rain {get; set;}
-    public double Snow {get; set;}
+    public double? Rain {get; set;}
+    public double? Snow {get; set;}
     public string Description {get; set;} = "";
     public string Icon {get; set;} = "";
 }

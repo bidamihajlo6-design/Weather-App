@@ -1,10 +1,9 @@
 ﻿@page
-@model IndexModel
+@model WeatherApp.Pages.IndexModel
 @{
     ViewData["Title"] = "WeatherApp";
 }
 
-<div boll class = "HasWeatherData" = false></div>
 <div class="text-center">
     <h1 class="app-title">WeatherApp</h1>
     <p class="app-subtittle">Погода у твоєму місці</p>
@@ -18,8 +17,10 @@
     {
         <p class="error-message"> @Model.ErrorMessage</p>
     }
-    @if (Model.HasWeatherData) {
-<div class="weather-card">
+
+        @if (Model.HasWeatherData)
+        {
+            <div class="weather-card">
         <h2 class="weather-city">@Model.Weather.City</h2>
 
         <h3 class="weather-description">@Model.Weather.Description</h3>
@@ -34,10 +35,30 @@
                 <p class="weather-temperature">@Model.Weather.Temperature °C</p>
     </div>
     <div class="weather-details">
-
-        <p class="weather-detail">🌧️Дощ: @Model.Weather.Rain мм</p>
-
-        <p class="weather-detail">❄️Сніг: @Model.Weather.Snow мм</p>
+        @if (Model.Weather.Rain.HasValue)
+                {
+                    <p class="weather-detail">
+                        🌧️ Дощ: @Model.Weather.Rain.Value мм
+                    </p>
+                }
+                else
+                { 
+                    <p class="weather-detail">
+                        🌧️ Дощ: дані відсутні
+                    </p>
+                }
+        @if (Model.Weather.Snow.HasValue)
+                {
+                    <p class="weather-detail">
+                        ❄️ Сніг: @Model.Weather.Snow.Value мм
+                    </p>
+                }
+                else
+                {
+                    <p class="weather-detail">
+                        ❄️ Сніг: дані відсутні
+                    </p>
+                }
 
         <p class="weather-detail">🌡️Відчувається як: @Model.Weather.FeelsLike °C</p>
 
@@ -53,5 +74,11 @@
 
         <p class="weather-detail">👁️Видимість: @Model.Weather.Visibility км</p>
         </div> 
-    </div>
+       
+        </div>
+            <a asp-page="/Forecast/Forecast"
+            asp-route-city="@Model.Weather.City">
+                Переглянути прогноз на 5 днів
+            </a>
+        
 }

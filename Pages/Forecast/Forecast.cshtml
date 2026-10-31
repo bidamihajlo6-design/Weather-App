@@ -1,0 +1,106 @@
+@page
+@using Microsoft.AspNetCore.Http.Features
+@model WeatherApp.Pages.Forecast.ForecastModel
+
+<h1>Прогноз погоди</h1>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <p>@Model.ErrorMessage</p>
+}
+else
+{
+    <h2>Місто: @Model.City</h2>
+}
+
+<form method="get">
+    <input type="hidden" name="city" value="@Model.City" />
+    
+    <button type="submit" name="selectedDate"
+    class="@(Model.SelectedDate.Date == DateTime.Today ? "active" : "")"
+        value="@DateTime.Today.ToString("yyyy-MM-dd")">
+        Сьогодні
+        </button>
+
+        <button type="submit" name="selectedDate"
+        class="@(Model.SelectedDate.Date == DateTime.Today.AddDays(1) ? "active" : "")"
+            value="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")">
+            Завтра
+            </button>
+
+            <button type="submit" name="selectedDate"
+            class="@(Model.SelectedDate.Date == DateTime.Today.AddDays(2) ? "active" : "")"
+                value="@DateTime.Today.AddDays(2).ToString("yyyy-MM-dd")">
+                Післязавтра
+                </button>
+
+                <button type="submit" name="selectedDate"
+                class="@(Model.SelectedDate.Date == DateTime.Today.AddDays(3) ? "active" : "")"
+                value="@DateTime.Today.AddDays(3).ToString("yyyy-MM-dd")">
+                Четвертий день 
+                </button>
+
+                <button type="submit" name="selectedDate"
+                class="@(Model.SelectedDate.Date == DateTime.Today.AddDays(4) ? "active" : "")"
+                value="@DateTime.Today.AddDays(4).ToString("yyyy-MM-dd")">
+                П'ятий день
+                </button>
+    </form>
+@if(Model.Forecast.Count > 0)
+{
+    <div class="forecast-section">
+        <h2>Прогноз на 5 днів</h2>
+
+        <div class="forecast-list">
+            @foreach (var item in Model.Forecast)
+            {
+                <div class="forecast-card clickable">
+                   <div class="forecast-card-header">                    
+                        @if(!string.IsNullOrEmpty(item.Icon))
+                        {
+                            <img src="https://openweathermap.org/img/wn/@(item.Icon)@@2x.png"
+                            class="weather-icon" />
+                        }
+                        <h3>@item.DateTimeText</h3>
+                        <p>Температура: @item.Temperature °C</p>
+                        <p>Опис: @item.Description</p>
+                   </div>
+                   <div class="forecast-card-details hidden">
+                        <p>Відчувається як: @item.FeelsLike °C</p>
+                        <p>💧 Вологість: @item.Humidity %</p>
+                        <p>🌀 Тиск: @item.Pressure hPa</p>
+                        <p>💨 Вітер: @item.WindSpeed м/с</p>
+                        <p>🧭 Напрямок: @WeatherApp.Models.WeatherHelper.GetWindDirection(item.WindDirection)</p>
+                        <p>☁️ Хмарність: @item.Cloudiness %</p>
+                        <p>👁️ Видимість: @item.Visibility км</p>
+                        @if(item.Rain.HasValue)
+                        {
+                            <p class="weather-detail">
+                            🌧️ Дощ: @item.Rain.Value мм 
+                            </p>
+                        }
+                        else
+                        {
+                            <p class="weather-detail">
+                                🌧️ Дощ: дані відсутні
+                            </p>
+                        }
+                        @if(item.Snow.HasValue)
+                        {
+                        <p class="weather-detail">
+                            ❄️ Сніг: @item.Snow.Value мм
+                        </p>
+                        }
+                        else
+                        {
+                            <p class="weather-detail">
+                                ❄️ Сніг: дані відсутні
+                            </p>
+                        }
+                   </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+

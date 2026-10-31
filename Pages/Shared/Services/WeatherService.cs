@@ -27,6 +27,7 @@ public class WeatherService
             return null;
         }
         string json = await response.Content.ReadAsStringAsync();
+        
 
         List<GeocodingResponse>? locations = 
             JsonSerializer.Deserialize<List<GeocodingResponse>>(json);
@@ -60,5 +61,24 @@ public class WeatherService
         OpenWeatherResponse? weather = 
             JsonSerializer.Deserialize<OpenWeatherResponse>(json);
         return weather;
+        
     }
+    public async Task<ForecastResponse?> GetForecast(double latitude, double longitude)
+    {
+        string apiKey = _configuration["OpenWeather:ApiKey"]!;
+        string url =  $"https://api.openweathermap.org/data/2.5/forecast?lat={latitude}&lon={longitude}&appid={apiKey}&units=metric&lang=uk";
+         HttpResponseMessage response = await _httpClient.GetAsync(url);
+         if(!response.IsSuccessStatusCode)
+        {
+            return null;
+        }
+        string json = await response.Content.ReadAsStringAsync();
+
+
+        ForecastResponse? forecast =
+            JsonSerializer.Deserialize<ForecastResponse>(json);
+
+                    return forecast;
+
+    } 
 }

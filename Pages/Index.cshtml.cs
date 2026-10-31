@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using WeatherApp.Models;
 using WeatherApp.Services;
 using System.Text.Json;
+using Microsoft.AspNetCore.SignalR.Protocol;
 
 namespace WeatherApp.Pages;
 
@@ -11,6 +12,7 @@ public class IndexModel : PageModel
     public string ErrorMessage {get; set;} ="";
     public bool HasWeatherData {get; set;} = false;
     public Weather Weather { get; set; } = new Weather();
+    public List<ForecastItem> Forecast {get; set;} = new List<ForecastItem>();
 
     public IndexModel(WeatherService weatherServise)
     {
@@ -48,12 +50,44 @@ public class IndexModel : PageModel
 
             OpenWeatherResponse? response =
                 await _weathersServise.GetWeather(latitude,longitude);
-            
+
             if(response is null)
             {
                 ErrorMessage = "Помилка перетворення файлів.";
                 return;
             }
+
+            ForecastResponse? forecastResponse = 
+                await _weathersServise.GetForecast(latitude,longitude);
+
+            if(forecastResponse is null)
+            {
+                ErrorMessage = "Помилка отримання файлів.";
+                return;
+            }
+            Forecast = new List<ForecastItem>();
+            
+            foreach(var item in forecastResponse.Items)
+            {
+                Forecast.Add(new ForecastItem
+                {
+                    DateTimeText = item.Time,
+                    Temperature = item.Main.Temp,
+                    FeelsLike = item.Main.FeelsLike,
+                    Humidity = item.Main.Humidity,
+                    Pressure = item.Main.Pressure,
+                    WindSpeed = item.Wind.Speed,
+                    WindDirection = item.Wind.Deg,
+                    Cloudiness = item.Clouds.All,
+                    Visibility = item.Visibility / 1000.0,
+                    Description = item.Weather.Count > 0 ? item.Weather[0].Description : "",
+                    Icon = item.Weather.Count > 0 ? item.Weather[0].Icon : "",
+                    Rain = item.Rain?.ThreeHour,
+                    Snow = item.Snow?.ThreeHour
+                });
+            }
+              
+            
 
             if (response.Main is null || response.Wind is null || response.Clouds is null || response.Weather is null)
             {
@@ -82,6 +116,8 @@ public class IndexModel : PageModel
             Weather.WindDirection = response.Wind.Deg;
             Weather.Cloudiness = response.Clouds.All;
             Weather.Visibility = response.Visibility / 1000.0;
+            Weather.Rain = response.Rain?.OneHour;
+            Weather.Snow = response.Snow?.OneHour;
 
             if (response.Weather.Count > 0)
             {

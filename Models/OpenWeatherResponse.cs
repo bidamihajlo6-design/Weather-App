@@ -13,6 +13,13 @@ public class OpenWeatherResponse
     [JsonPropertyName("clouds")]
     public CloudsData Clouds { get; set; } = new();
 
+    [JsonPropertyName("rain")]
+    public RainData? Rain {get; set;}
+ 
+    [JsonPropertyName("snow")]
+    public SnowData? Snow {get; set;}
+
+
     [JsonPropertyName("weather")]
     public List<WeatherData> Weather { get; set; } = new();
 
@@ -51,6 +58,23 @@ public class CloudsData
 {
     [JsonPropertyName("all")]
     public int All { get; set; }
+}
+
+public class RainData
+{
+    [JsonPropertyName("1h")]
+    public double? OneHour {get; set;}
+
+    [JsonPropertyName("3h")]
+    public double? ThreeHour {get; set;}
+}
+
+public class SnowData
+{
+    [JsonPropertyName("1h")]
+    public double? OneHour {get; set;}
+    [JsonPropertyName("3h")]
+    public double? ThreeHour {get; set;}
 }
 
 public class WeatherData
