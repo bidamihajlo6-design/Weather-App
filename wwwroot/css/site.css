@@ -220,16 +220,89 @@ form button.active {
   color: #dbeafe;
 }
 
-.hidden {
-  display: none;
+.forecast-card-details {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 1px solid transparent; 
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+}
+
+.forecast-card-details.expanded {
+  margin-top:  15px;
+  padding-top: 15px;
+  border-top-color: #334e68;
+  max-height: 500px;
+  opacity: 1;
 }
 
 .forecast-card.clickable {
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.3s ease;
 }
 
 .forecast-card.clickable:hover{
   transform: translateY(-3px);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+.forecast-card.expanded-card {
+  border-color: #60a5fa;
+  box-shadow: 0 0 12px rgba(96, 165, 250, 0.25);
+}
+
+.forecast-card-time h3{
+  font-size: 16px;
+  color: #A9B8D0;
+  margin-bottom: 12px;
+}
+
+.forecast-card-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.forecast-card-main .weather-icon{
+  width: 70px;
+  height: 70px;
+}
+
+.forecast-card-summary {
+  flex: 1;
+}
+
+.forecast-temperature {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff !important;
+}
+
+.forecast-description {
+  margin: 4px 0 0;
+  color: #A9B8D0 !important;
+}
+
+.forecast-arrow {
+  font-size: 26px;
+  color: #93C5FD;
+  transition: transform 0.3s ease; 
+}
+
+.forecast-card.expanded-card .forecast-arrow {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 650px) {
+  .forecast-list {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .forecast-card {
+    padding: 16px;
+  }
 }

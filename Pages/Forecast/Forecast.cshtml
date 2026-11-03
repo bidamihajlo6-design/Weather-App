@@ -56,16 +56,25 @@ else
             {
                 <div class="forecast-card clickable">
                    <div class="forecast-card-header">                    
-                        @if(!string.IsNullOrEmpty(item.Icon))
-                        {
-                            <img src="https://openweathermap.org/img/wn/@(item.Icon)@@2x.png"
-                            class="weather-icon" />
-                        }
+                      <div class="forecast-card-time">
                         <h3>@item.DateTimeText</h3>
-                        <p>Температура: @item.Temperature °C</p>
-                        <p>Опис: @item.Description</p>
+                      </div>
+                      <div class="forecast-card-main">
+                        @if (!string.IsNullOrEmpty(item.Icon))
+                            {
+                                <img src="https://openweathermap.org/img/wn/@(item.Icon)@@2x.png"
+                                class="weather-icon" />
+                            }
+
+                            <div class="forecast-card-summary">
+                                <p class="forecast-temperature">@item.Temperature °C</p>
+                                <p class="forecast-description">@item.Description</p>
+                            </div>
+
+                            <span class="forecast-arrow">⌄</span>
+                        </div>
                    </div>
-                   <div class="forecast-card-details hidden">
+                   <div class="forecast-card-details">
                         <p>Відчувається як: @item.FeelsLike °C</p>
                         <p>💧 Вологість: @item.Humidity %</p>
                         <p>🌀 Тиск: @item.Pressure hPa</p>
@@ -102,5 +111,9 @@ else
             }
         </div>
     </div>
+}
+
+@section Scripts {
+    <script src="~/js/forecast.js" asp-append-version="true"></script>
 }
 

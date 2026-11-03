@@ -60,11 +60,12 @@ public class IndexModel : PageModel
             ForecastResponse? forecastResponse = 
                 await _weathersServise.GetForecast(latitude,longitude);
 
-            if(forecastResponse is null)
+            if(forecastResponse is null || forecastResponse.Items is null || forecastResponse.Items.Count == 0)
             {
-                ErrorMessage = "Помилка отримання файлів.";
+                ErrorMessage = "Прогноз погоди для цього міста недоступний.";
                 return;
             }
+            
             Forecast = new List<ForecastItem>();
             
             foreach(var item in forecastResponse.Items)
