@@ -189,12 +189,15 @@ form button{
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: white;
+  color: #333;
+  -webkit-text-fill-color: #333;
   cursor: pointer;
 }
 
 form button.active {
   background-color: #2563eb;
   color: white;
+  -webkit-text-fill-color: white;
   border-color: #2563eb;
 }
 
